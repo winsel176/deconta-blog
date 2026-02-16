@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  name         String
+  handle       String   @unique
+  createdAt    DateTime @default(now())
+ 
+  avatarUrl   String   @default("")
+  bio         String   @default("")
+  instagram   String   @default("")
+  x           String   @default("")
+  linkedin    String   @default("")
+  youtube     String   @default("")
+  tiktok      String   @default("")
+  website     String   @default("")
+
+  posts        Post[]
+}
+
+model Post {
+  id           Int      @id @default(autoincrement())
+  slug         String   @unique
+  title        String
+  excerpt      String
+  content      String
+  category     String
+  authorName   String
+  authorHandle String
+  coverImage   String   @default("")
+  published    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  authorId     Int?
+  author       User?    @relation(fields: [authorId], references: [id])
+}
+model Course {
+  id           Int      @id @default(autoincrement())
+  slug         String   @unique
+  title        String
+  shortDesc    String
+  longDesc     String
+  category     String
+  level        String   @default("Principiante") // Principiante|Intermedio|Avanzado
+  image        String   @default("")
+  affiliateUrl String
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Subscriber {
+  id             Int      @id @default(autoincrement())
+  email          String   @unique
+  token          String   @unique
+  createdAt      DateTime @default(now())
+  confirmedAt    DateTime?
+  unsubscribedAt DateTime?
+  lastIP         String?
+  userAgent      String?
+}
